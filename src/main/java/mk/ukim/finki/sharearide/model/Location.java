@@ -21,7 +21,7 @@ public class Location {
             name = "UUID",
             strategy = "org.hibernate.id.UUIDGenerator"
     )
-    private Long id;
+    private String id;
 
     private String description;
     private Double latitude;

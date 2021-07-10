@@ -6,6 +6,7 @@ import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.Set;
 
 @Data
@@ -42,4 +43,17 @@ public class Trip {
     @OneToOne
     private MessageThread messageThread;
 
+    public Trip(String description, Double price, City origin, City destination, LocalDateTime departure, Location meetingPlace, Integer offeredSeats, User driver) {
+        this.status = TripStatus.BIDDING;
+        this.description = description;
+        this.price = price;
+        this.origin = origin;
+        this.destination = destination;
+        this.departure = departure;
+        this.meetingPlace = meetingPlace;
+        this.offeredSeats = offeredSeats;
+        this.driver = driver;
+        this.passengers = new HashSet<>();
+        this.messageThread = new MessageThread();
+    }
 }
