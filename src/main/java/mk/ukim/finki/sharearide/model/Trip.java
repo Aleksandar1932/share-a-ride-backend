@@ -1,6 +1,7 @@
 package mk.ukim.finki.sharearide.model;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import mk.ukim.finki.sharearide.model.enumerations.TripStatus;
 import org.hibernate.annotations.GenericGenerator;
 
@@ -11,6 +12,7 @@ import java.util.Set;
 
 @Data
 @Entity
+@NoArgsConstructor
 public class Trip {
     @Id
     @GeneratedValue(generator = "UUID")
@@ -24,23 +26,23 @@ public class Trip {
     private String description;
     private Double price;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     private City origin;
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     private City destination;
     private LocalDateTime departure;
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     private Location meetingPlace;
 
     private Integer offeredSeats;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     private User driver;
 
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.ALL)
     private Set<User> passengers;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     private MessageThread messageThread;
 
     public Trip(String description, Double price, City origin, City destination, LocalDateTime departure, Location meetingPlace, Integer offeredSeats, User driver) {

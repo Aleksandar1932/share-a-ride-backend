@@ -17,8 +17,11 @@ import mk.ukim.finki.sharearide.model.User;
 import mk.ukim.finki.sharearide.service.UserService;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -33,12 +36,12 @@ public class TripServiceImpl implements TripService {
 
 
     @Override
-    public Trip findById(String tripId) {
-        return this.tripRepository.findById(tripId).orElseThrow(() -> new TripDoesNotExistException(tripId));
+    public Optional<Trip> findById(String tripId) {
+        return Optional.of(this.tripRepository.findById(tripId).orElseThrow(() -> new TripDoesNotExistException(tripId)));
     }
 
     @Override
-    public Trip offer(TripDto tripDto) {
+    public Optional<Trip> offer(TripDto tripDto) {
         User driver = this.userService.findByUsername(tripDto.getDriverUsername());
 
         City origin = this.cityService.findByName(tripDto.getOriginName());
@@ -51,20 +54,21 @@ public class TripServiceImpl implements TripService {
                 tripDto.getPrice(),
                 origin,
                 destination,
-                tripDto.getDeparture(),
+                LocalDateTime.parse(tripDto.getDeparture(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")),
                 meetingPlace,
                 tripDto.getOfferedSeats(),
                 driver
         );
 
-        return this.tripRepository.save(trip);
+        return Optional.of(this.tripRepository.save(trip));
     }
 
     @Override
-    public Trip cancel(UserTripDto userTripDto) {
+    public Optional<Trip> cancel(UserTripDto userTripDto) {
         User user = this.userService.findByUsername(userTripDto.getUsername());
 
-        Trip trip = this.findById(userTripDto.getTripId());
+        Trip trip = this.findById(userTripDto.getTripId())
+                .orElseThrow(() -> new TripDoesNotExistException(userTripDto.getTripId()));
         boolean isDriver = trip.getDriver().equals(user);
 
         if (isDriver) {
@@ -81,7 +85,7 @@ public class TripServiceImpl implements TripService {
             trip.getPassengers().remove(user);
         }
 
-        return this.tripRepository.save(trip);
+        return Optional.of(this.tripRepository.save(trip));
     }
 
     @Override
@@ -118,9 +122,9 @@ public class TripServiceImpl implements TripService {
     }
 
     @Override
-    public Trip registerAsPassenger(UserTripDto userTripDto) {
+    public Optional<Trip> registerAsPassenger(UserTripDto userTripDto) {
         User user = this.userService.findByUsername(userTripDto.getUsername());
-        Trip trip = this.findById(userTripDto.getTripId());
+        Trip trip = this.findById(userTripDto.getTripId()).orElseThrow(() -> new TripDoesNotExistException(userTripDto.getTripId()));
 
         if (trip.getDriver().equals(user)) {
             throw new DriverCannotBePassengerException(userTripDto.getUsername());
@@ -128,6 +132,6 @@ public class TripServiceImpl implements TripService {
 
         trip.getPassengers().add(user);
 
-        return this.tripRepository.save(trip);
+        return Optional.of(this.tripRepository.save(trip));
     }
 }

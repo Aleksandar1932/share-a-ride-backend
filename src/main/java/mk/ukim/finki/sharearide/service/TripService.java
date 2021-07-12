@@ -6,13 +6,14 @@ import mk.ukim.finki.sharearide.model.dto.TripSearchCriteriaDto;
 import mk.ukim.finki.sharearide.model.dto.UserTripDto;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface TripService {
-    Trip findById(String tripId);
+    Optional<Trip> findById(String tripId);
 
-    Trip offer(TripDto tripDto);
+    Optional<Trip> offer(TripDto tripDto);
 
-    Trip cancel(UserTripDto userTripDto);
+    Optional<Trip> cancel(UserTripDto userTripDto);
 
     List<Trip> findPassenger(String username);
 
@@ -22,5 +23,5 @@ public interface TripService {
 
     List<Trip> search(TripSearchCriteriaDto searchCriteriaDto);
 
-    Trip registerAsPassenger(UserTripDto userTripDto);
+    Optional<Trip> registerAsPassenger(UserTripDto userTripDto);
 }
