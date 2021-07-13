@@ -55,7 +55,7 @@ public class TripController {
         return ResponseEntity.ok().body(trips);
     }
 
-    @GetMapping("/search")
+    @PostMapping("/search")
     public ResponseEntity<Collection<Trip>> search(@RequestBody TripSearchCriteriaDto tripSearchCriteriaDto) {
         Collection<Trip> trips = this.tripService.search(tripSearchCriteriaDto);
         return ResponseEntity.ok(trips);

@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public interface TripRepository extends JpaRepository<Trip, String> {
-    List<Trip> findTripsByDestinationAndOriginAndDepartureBetweenAndPrice(City destination, City origin, LocalDateTime from, LocalDateTime to, Double price);
+    List<Trip> findTripsByDestinationAndOrigin(City destination, City origin);
 
     List<Trip> findTripsByDriverUsername(String username);
 

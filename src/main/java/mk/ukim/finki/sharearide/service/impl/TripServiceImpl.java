@@ -113,12 +113,12 @@ public class TripServiceImpl implements TripService {
         City origin = this.cityService.findByName(searchCriteriaDto.getOriginName());
         City destination = this.cityService.findByName(searchCriteriaDto.getDestinationName());
 
-        return this.tripRepository.findTripsByDestinationAndOriginAndDepartureBetweenAndPrice(
-                origin,
+        return this.tripRepository.findTripsByDestinationAndOrigin(
                 destination,
-                searchCriteriaDto.getDepartureTimeFrom(),
-                searchCriteriaDto.getDepartureTimeTo(),
-                searchCriteriaDto.getPrice());
+                origin).stream()
+                .filter(trip -> trip.getDeparture().isAfter(searchCriteriaDto.getDepartureTimeFrom())
+                        && trip.getDeparture().isBefore(searchCriteriaDto.getDepartureTimeTo()))
+                .filter(trip -> trip.getPrice() <= searchCriteriaDto.getPrice()).collect(Collectors.toList());
     }
 
     @Override

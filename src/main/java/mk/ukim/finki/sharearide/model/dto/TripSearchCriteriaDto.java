@@ -11,4 +11,4 @@ public class TripSearchCriteriaDto {
     LocalDateTime departureTimeFrom;
     LocalDateTime departureTimeTo;
     Double price;
-}
+}   
